@@ -32,7 +32,7 @@ app.listen(port,()=>{
 
 })
 
-const uri = "mongodb+srv://sgl_lab_dhaka:F49pmTL7HgKlTDgx@cluster0.puubbrb.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.puubbrb.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 // main function which will run for basic CRUD  operation
@@ -92,6 +92,8 @@ try{
         res.send(waste);
     })
     
+    
+
    
 
     
