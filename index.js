@@ -1,6 +1,7 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
+const { query } = require('express');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const app = express();
@@ -37,13 +38,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 // main function which will run for basic CRUD  operation
 
-
+ 
 async function run(){
 await client.connect();
+// small cert collections
 const stock_collection = client.db("sgl_inventory").collection("total_stock");
 const Uses_collection = client.db("uses_inventory").collection("uses_collection");
 const WasteCollection = client.db("waste_inventory").collection("waste_collection");
+
+// medium cert collections
+const stock_collection_med = client.db("sgl_inventory_med").collection("total_stock_med");
+const uses_collection_med = client.db("uses_inventory_med").collection("uses_collection_med");
+const waste_collection_med= client.db("waste_inventory_med").collection("waste_collection_med");
+
 try{
+    // small cert crud
     app.get('/stock', async(req,res)=>{
         const query = {};
         const curser = stock_collection.find(query);
@@ -92,14 +101,50 @@ try{
         res.send(waste);
     })
     
-    
+    // small cert crud ends here
 
-   
+    // medium cert collection starts
+   app.post("/stock_med", async(req,res)=>{
+    const stock = req.body;
+    const result = await stock_collection_med.insertOne(stock);
+    res.send(result);
+    })
 
+    app.get('/stock_med',async(req,res)=>{
+        const query = {};
+        const curser = stock_collection_med.find(query);
+        const stock_med = await curser.toArray();
+        res.send(stock_med);
     
+    app.get('/')
+    })
     
+    app.post('/uses_med', async(req,res)=>{
+        const uses = req.body;
+        const result = await uses_collection_med.insertOne(uses);
+        res.send(result);
+})    
 
-    
+    app.get('/uses_med', async(req,res)=>{
+        const query = {};
+        const curser = uses_collection_med.find(query);
+        const uses_med = await curser.toArray();
+        res.send(uses_med);
+    })
+
+    app.post('/waste_med',async(req,res)=>{
+        const waste = req.body;
+        const result = await waste_collection_med.insertOne(waste);
+        res.send(result);
+    })
+
+    app.get('/waste_med',async(req,res)=>{
+        const query = {};
+        const curser = waste_collection_med.find(query);
+        const wastage_med = await curser.toArray();
+        res.send(wastage_med); 
+    })
+
 }
 catch{
 
